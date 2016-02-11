@@ -56,8 +56,11 @@ func Decode(jwt, secret []byte) (*Claims, error) {
 	}
 	claims := &Claims{}
 	payload := make([]byte, base64.RawURLEncoding.DecodedLen(len(parts[1])))
-	base64.RawURLEncoding.Decode(payload, parts[1])
-	err = json.Unmarshal(payload, claims)
+	n, err := base64.RawURLEncoding.Decode(payload, parts[1])
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(payload[:n], claims)
 	if err != nil {
 		return nil, ErrPayload
 	}

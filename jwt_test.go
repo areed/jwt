@@ -6,6 +6,25 @@ import (
 	"testing"
 )
 
+func TestEncodeDecode(t *testing.T) {
+	claims := &Claims{
+		Iss: "whoyou.io",
+		Sub: "jane@example.com",
+		Iat: 1000,
+		Exp: 10000,
+		Aud: "whoyou.io",
+	}
+	secret := []byte("secret")
+	jwt, err := Encode(claims, secret)
+	if err != nil {
+		t.Fatal(err)
+	}
+	claims, err = Decode(jwt, secret)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestEncode(t *testing.T) {
 	claims := &Claims{
 		Iss: "whoyou.io",
